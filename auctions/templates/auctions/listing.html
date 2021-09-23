@@ -1,0 +1,85 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+{% load crispy_forms_tags %}
+
+<div style="background-color:rgb(30, 204, 210);">
+    {% for msg in messages %}
+        <p style="position: relative; left:40%;"> {{ msg }} </p>
+    {% endfor %}
+</div>
+
+<h3>Listing: {{name.title}}</h3>
+<div >
+    <form action="{% url 'add_watch_list' item=name.title %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if name.watchlist is False %}
+            <input style="background-color: darkgrey; font-size: small; color: white; border:grey; border-radius: 5px;" 
+            type="submit" name="add-to-watchlist" value="add-to-watchlist">
+        {% else %}
+            <input style="background-color: darkgrey; font-size: small; color: white; border:grey; border-radius: 5px;"
+             type="submit" name="remove-from-watchlist" value="remove-from-watchlist">
+        {% endif %}
+    </form>
+    <br>  
+</div>
+
+<div>
+    <img src="{{ name.auction_image.url }}" alt="Image not found"  width="500" height="500">
+</div>
+<div style="width: 30%;">
+    <p>{{name.description}}</p> 
+</div>
+
+
+<br>
+
+{% for details in details %}
+    {% if details.listed_by == user.username %}
+        <form action="{% url 'close_bid' name=name.title %}" method="post">
+        {% csrf_token %}
+            <input class="btn btn-primary" type="submit" name="submit" value="Close Bid">
+        </form>
+        <br>
+        <form action="{% url 'listing' name=name.id %}" method="post">
+        {% csrf_token %}
+            <input class="btn btn-primary" type="submit" name="submit" value="Delete_listing">
+        </form>
+    {% endif %}
+
+<p>Listed_by: <span style="color:blue;">{{details.listed_by}}</span></p>
+<p>Listed_on: {{details.date}}</p>
+<h3>${{name.min_price}}</h3>
+{%endfor%}
+
+<div class='form-group' style="width:20%;">
+<p>{{count}} bid(s) so far. 
+    {% for msg in messages %}
+        {{ msg }}
+    {%endfor%}</p>
+<form action="{% url 'listing' name=name.id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <input class="btn btn-primary" type="submit" name="submit" value="Place Bid">
+    
+</form>
+</div>
+<br>
+{% for comments in comment %}
+    <p>{{comments.comment}} </p>
+    <p>Comment By: {{comments.comment_by}}</p>
+    <p>date: {{comments.date}}</p>
+{% endfor %}
+<div style="width:400px; height: 200px;">
+<div class='form-group'>
+<form action="{% url 'listing' name=name.id %}" method="post">
+    {% csrf_token %}
+    <textarea class="form-control" name="your_comment" rows="5" cols="50"></textarea>
+    <br>
+    <input class="btn btn-primary" type="submit" name="comment" value="comment">
+    
+</form>
+</div>
+</div>
+
+{% endblock %}

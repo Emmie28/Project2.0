@@ -1,0 +1,47 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+    
+    <div style="background-color:rgb(30, 204, 210);">
+        {% for msg in messages %}
+            <p style="position: relative; left:40%;"> {{ msg }} </p>
+        {% endfor %}
+    </div>
+
+    <h3>Listings</h3>
+    {% for f in form %}
+    
+    <div style="margin:10px; border:1px solid gray; border-radius: 10px; padding:10px; padding-right: none;">
+        <a href="{% url 'listing' name=f.id %}" > 
+            <div class="row">
+            
+            <div class="col-2">
+                
+                <img src="{{ f.auction_image.url }}" alt="Image not found"  width="150" height="150">
+            
+            </div></a>
+            
+            <div class="col-6">
+        
+                <p><b>{{ f.title }}</a></b></p>
+            
+                <p>{{ f.description }}</p>
+                <p style="position:absolute; bottom: 0px;">Listed on: {{ f.date }}</p>
+            </div>
+            
+            <div class="col-2">
+                <p style="text-align: center; color:green; position:absolute; top: 45%;"><b>Available For Bid</b></p>
+            </div>
+           
+            <div class="col-2">
+                <p><b>Starting bid:</b></p>
+                <p><b>$</b>{{ f.min_price }}</p>
+            </div>
+    
+        </div></a>
+        
+    </div>
+    
+    {% endfor %}
+    
+
+{% endblock %}

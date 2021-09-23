@@ -1,0 +1,13 @@
+
+.watchlist_btn{
+    background-color: darkgrey; 
+    font-size: small; 
+    color: white; 
+    border:grey; 
+    border-radius: 5px;
+}
+
+body {
+    background-color: cornsilk;
+}
+

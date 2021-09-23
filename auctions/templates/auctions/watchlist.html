@@ -1,0 +1,24 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+
+<div style="background-color:rgb(30, 204, 210);">
+{% for msg in messages %}
+    <p style="position: relative; left:40%;"> {{ msg }} </p>
+{% endfor %}
+</div>
+<h3>WatchList</h3>
+{% for names in name %}
+    {% if names.watchlist == True   %}
+        
+        <div>
+            <p><a href="{% url 'listing' name=names.id %}">{{names.title}}</a></p>
+            <img src="{{ names.auction_image.url }}" alt="Image not found"  width="150" height="150">
+        </div>
+        <p></p>
+        <p><b>Description:</b> <br>{{names.description}}</p>
+        <h3>Starting Bid: ${{names.min_price}}</h3>
+        <hr>
+     {% endif %}   
+{% endfor %}
+
+{% endblock %}
