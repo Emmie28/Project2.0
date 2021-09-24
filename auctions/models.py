@@ -7,7 +7,13 @@ class User(AbstractUser):
     pass
 
 
-CATEGORIES = ['No Category', 'Books', 'Fashion', 'Electronics','Accessories']
+CATEGORIES = (
+    ('No Category','No Category'),
+    ('Books', 'Books'),
+    ('Fashion', 'Fashion'),
+    ('Electronics', 'Electronics'),
+    ('Accessories', 'Accessories'),
+)
 
 
 class Auction(models.Model):
@@ -16,7 +22,7 @@ class Auction(models.Model):
     auction_image = models.ImageField(upload_to="images/", blank=True, null=True)
     min_price = models.FloatField(default=0.00)
     watchlist = models.BooleanField(default=False)
-    category = models.CharField(max_length=150, default="No Category")
+    category = models.CharField(max_length=150, choices=CATEGORIES, default="No Category")
     date = models.DateTimeField(default=datetime.datetime.now())
 
     def __str__(self):
