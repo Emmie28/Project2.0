@@ -13,7 +13,7 @@ class ListForm(ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'min_price': forms.TextInput(attrs={'class': 'form-control'}),
             'auction_image': forms.FileInput(attrs={'class': 'form-control'}),
-            'category': forms.TextInput(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
         }
 
 

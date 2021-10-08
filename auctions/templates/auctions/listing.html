@@ -45,9 +45,12 @@
             <input class="btn btn-primary" type="submit" name="submit" value="Delete_listing">
         </form>
     {% endif %}
-
-<p>Listed_by: <span style="color:blue;">{{details.listed_by}}</span></p>
-<p>Listed_on: {{details.date}}</p>
+<h3>Details:</h3>
+<ul>
+    <li>Listed_by: <span style="color:blue;">{{details.listed_by}}</span></li>
+    <li>Listed_on: {{details.date}}</li>
+    <li>Category: {{ name.category }}</li>
+</ul>
 <h3>${{name.min_price}}</h3>
 {%endfor%}
 
@@ -65,18 +68,24 @@
 </form>
 </div>
 <br>
+
+<div style=" width:400px;">
+    <p><b>Comments:</b></p>
 {% for comments in comment %}
     <p>{{comments.comment}} </p>
-    <p>Comment By: {{comments.comment_by}}</p>
-    <p>date: {{comments.date}}</p>
+    <p style="margin-left: 20px; font-size: 10px;"> ~{{comments.comment_by}} 
+        <br>~{{comments.date}}
+    </p>
+    <hr>
 {% endfor %}
+</div>
 <div style="width:400px; height: 200px;">
 <div class='form-group'>
 <form action="{% url 'listing' name=name.id %}" method="post">
     {% csrf_token %}
     <textarea class="form-control" name="your_comment" rows="5" cols="50"></textarea>
     <br>
-    <input class="btn btn-primary" type="submit" name="comment" value="comment">
+    <input class="btn btn-primary" id="comment_button" type="submit" name="comment" value="comment">
     
 </form>
 </div>

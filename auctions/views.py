@@ -82,8 +82,10 @@ def active_listing(request):
 
 
 def categories(request):
-
-    return render(request, 'auctions/category.html', {'categories': CATEGORIES})
+    cat_list = []
+    for i in range(len(CATEGORIES)):
+        cat_list.append(CATEGORIES[i][0])
+    return render(request, 'auctions/category.html', {'categories': cat_list})
 
 
 # To get an item with its category
@@ -96,7 +98,20 @@ def category_list(request, category):
 
 
 # To handle item listings.
+
 def listing(request, name):
+
+    # A function to create and populate a list of comments.
+    def populate_list(comments):
+        # A list to hold all the comments
+        l = []
+
+        # populate the list with existing comments.
+        for com in comments:
+            l.append(com)
+        return l
+
+    # Declare and Initialise variables
     data_id = int(name)
     obj = Auction.objects.get(id=data_id)
     obj_price = obj.min_price
@@ -106,20 +121,15 @@ def listing(request, name):
     c_form = CommentForm()
     comments = Comment.objects.filter(tag=obj)
 
-    # A list to hold all the comments
-    l = []
-
-    # populate the list with existing comments.
-    for com in comments:
-        l.append(com)
+    l = populate_list(comments)
 
     # Get the number bids on an item.
     bid_count = Bidding.objects.filter(item=obj)
     count = len(bid_count)
 
     if request.method == 'POST':
-
-        form = BiddingForm(request.POST)
+        if request.POST.get('submit'):
+            form = BiddingForm(request.POST)
         if form.is_valid():
             bid = form.cleaned_data.get('bid_amount')
 
@@ -127,8 +137,7 @@ def listing(request, name):
             if int(bid) < int(obj_price):
                 messages.error(request, "Your bid is less than the minimum.")
                 return render(request, "auctions/listing.html", {'name': obj, 'form': form, 'item': Bidding.item,
-                                                                 'details': details, 'c_form': c_form, 'comment': l,
-                                                                 'count': count})
+                                                    'details': details, 'c_form': c_form, 'comment': l,'count': count})
             else:
                 bidding = Bidding(item=obj, bid_amount=bid, bidder_name=uname)
                 bidding.save()
@@ -143,6 +152,8 @@ def listing(request, name):
         if data:
             comments = Comment(comment=data, tag=obj, comment_by=uname, date=datetime.datetime.now())
             comments.save()
+            comments = Comment.objects.filter(tag=obj)
+            l = populate_list(comments)
 
             return render(request, "auctions/listing.html", {'name': obj, 'form': form, 'item': Bidding.item,
                                                     'details': details, 'c_form': c_form, 'comment': l, 'count':count})
@@ -181,6 +192,7 @@ def watchlist(request):
     return render(request, "auctions/watchlist.html", {'name': watch_list})
 
 
+@login_required
 def close_bid(request, name):
 
     if request.method == 'POST':
